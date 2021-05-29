@@ -10,20 +10,19 @@ CreateDiv.prototype.init = function () {
 	document.body.appendChild(div)
 }
 
-var ProxySingleTonCreateDiv = (function (html) {
+var ProxySingleTonCreateDiv = function (html) {
 	var instance;
 
 	return html => {
-		console.log(instance)
 		if (!instance) {
 			instance = new CreateDiv(html)
 			console.log(instance.html)
 		}
 		return instance
 	}
-})()
+}
 
-var a = ProxySingleTonCreateDiv('a')
-var b = ProxySingleTonCreateDiv('b')
+var a = new ProxySingleTonCreateDiv('a')()
+var b = new ProxySingleTonCreateDiv('b')()
 
 console.log(a === b, a, b)
