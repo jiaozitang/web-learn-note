@@ -1,0 +1,26 @@
+{
+  "name": "web-learn-note",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx babel src -w -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiaozitang/web-learn-note.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiaozitang/web-learn-note/issues"
+  },
+  "homepage": "https://github.com/jiaozitang/web-learn-note#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.14.3",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
+    "webpack": "^5.38.1"
+  }
+}
