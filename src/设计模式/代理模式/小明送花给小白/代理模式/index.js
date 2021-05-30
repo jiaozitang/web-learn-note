@@ -4,7 +4,6 @@ const Flower = function () {
 
 const xiaoming = {
 	sendFlower: target => {
-		debugger
 		const flower = new Flower()
 		target.receiveFlower(flower)
 	}
@@ -12,8 +11,9 @@ const xiaoming = {
 
 const xiaodai = {
 	receiveFlower: flower => {
-		xiaobai.listenGoodMood()
-		xiaobai.receiveFlower(flower)
+		xiaobai.listenGoodMood().then(() => {
+			xiaobai.receiveFlower(flower)
+		})
 	}
 }
 
@@ -21,11 +21,12 @@ const xiaobai = {
 	receiveFlower: flower => {
 		console.log('收到花', flower)
 	},
-	listenGoodMood: () => {
+	listenGoodMood: fn => {
+		return new Promise((reslove, reject) => {
 			// 10秒后，心情变好
-			setTimeout(() => {
-			}, 10 * 1000)
+			reslove()
 		})
+	}
 }
 
 xiaoming.sendFlower(xiaodai)
