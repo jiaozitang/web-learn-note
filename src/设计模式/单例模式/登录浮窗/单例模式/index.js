@@ -8,24 +8,29 @@ const createLoginLayer = () => {
 	return div
 }
 
-const createSingle = function(fn) {
-	var instance
-	return function () {
-		return instance || (instance = fn.apply(this, arguments))
+const createSingle = (function () {
+	var instance = {}
+	return function (fn) {
+		if (!instance[fn.name]) {
+			instance[fn.name] = fn.apply(this, arguments)
+		}
+		return instance[fn.name]
 	}
+})()
+
+function createIframe() {
+	const iframe = document.createElement('iframe')
+	document.body.appendChild(iframe)
+	iframe.style.display = 'none'
+	return iframe
 }
 
 const createSingleLoginLayer = createSingle(createLoginLayer)
-
-const createSingleIframe = createSingle(() => {
-	const iframe = document.createElement('iframe')
-	document.body.appendChild(iframe)
-	return iframe
-})
+const createSingleIframe = createSingle(createIframe)
 
 document.getElementById('loginBtn').onclick = () => {
-	const loginLayer = createSingleLoginLayer()
-	const iframe = createSingleIframe()
+	const loginLayer = createSingleLoginLayer
+	const iframe = createSingleIframe
 	loginLayer.style.display = 'block'
 	iframe.style.display = 'block'
 }

@@ -9,23 +9,30 @@ var createLoginLayer = function createLoginLayer() {
   return div;
 };
 
-var createSingle = function createSingle(fn) {
-  var instance;
-  return function () {
-    return instance || (instance = fn.apply(this, arguments));
-  };
-};
+var createSingle = function () {
+  var instance = {};
+  return function (fn) {
+    if (!instance[fn.name]) {
+      instance[fn.name] = fn.apply(this, arguments);
+    }
 
-var createSingleLoginLayer = createSingle(createLoginLayer);
-var createSingleIframe = createSingle(function () {
+    return instance[fn.name];
+  };
+}();
+
+function createIframe() {
   var iframe = document.createElement('iframe');
   document.body.appendChild(iframe);
+  iframe.style.display = 'none';
   return iframe;
-});
+}
+
+var createSingleLoginLayer = createSingle(createLoginLayer);
+var createSingleIframe = createSingle(createIframe);
 
 document.getElementById('loginBtn').onclick = function () {
-  var loginLayer = createSingleLoginLayer();
-  var iframe = createSingleIframe();
+  var loginLayer = createSingleLoginLayer;
+  var iframe = createSingleIframe;
   loginLayer.style.display = 'block';
   iframe.style.display = 'block';
 };
