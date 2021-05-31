@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx babel src -w -d dist",
-    "push": "git add . && git commit -m '设计模式'"
+    "push": "git add. && git commit -m 设计模式"
   },
   "repository": {
     "type": "git",
