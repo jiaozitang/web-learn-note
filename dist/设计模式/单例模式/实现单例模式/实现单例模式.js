@@ -18,7 +18,7 @@ Singleton.getInstance = function (name) {
 
   return _this.instance;
 }; // Singleton.getInstance = (() => {
-// 	var instance = null
+// 	let instance = null
 // 	return name => {
 // 		if (!instance) {
 // 			instance = new Singleton(name)

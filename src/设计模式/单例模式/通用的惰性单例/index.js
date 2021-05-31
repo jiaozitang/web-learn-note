@@ -1,13 +1,13 @@
-var getSingle = fn => {
-	var result
+let getSingle = fn => {
+	let result
 
 	return function () {
 		result || (result = fn.apply(this, arguments))
 	}
 }
 
-var createSingleIframe = getSingle(function () {
-	var iframe = document.createElement('iframe')
+let createSingleIframe = getSingle(function () {
+	let iframe = document.createElement('iframe')
 	document.body.appendChild(iframe)
 	console.log(iframe)
 	return iframe
@@ -15,8 +15,8 @@ var createSingleIframe = getSingle(function () {
 
 const iDiv = document.getElementsByTagName('div')[0]
 iDiv.onclick = function () {
-	var a = createSingleIframe('a')
-	var b = createSingleIframe('b')
+	let a = createSingleIframe('a')
+	let b = createSingleIframe('b')
 	console.log(a, b, a=== b)
 }
 console.log(iDiv, 1111)

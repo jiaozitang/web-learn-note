@@ -1,6 +1,6 @@
 /***********************策略对象**************************/
 
-var strategies = { 
+let strategies = { 
 	isNonEmpty: function(value, errorMsg) { 
 		if (value === '') { 
 			return errorMsg; 
@@ -20,7 +20,7 @@ var strategies = { 
 
 /***********************Validator类**************************/
   
-var Validator = function() { 
+let Validator = function() { 
 	this.cache = []; 
 };  
 
@@ -47,8 +47,8 @@ Validator.prototype.start = function() { 
 	return errorMsg
 };  
 
-var validataFunc = () => {
-	var validator = new Validator()
+let validataFunc = () => {
+	let validator = new Validator()
 	validator.add(registerForm.userName, [{
 		strategy: 'isNonEmpty',
 		errorMsg: '用户名不能为空'
@@ -70,11 +70,11 @@ var validataFunc = () => {
 }
 /***********************客户调用代码**************************/
   
-var registerForm = document.getElementById('registerForm');  
+let registerForm = document.getElementById('registerForm');  
 
 
 registerForm.onsubmit = function() { 
-	var errorMsg = validataFunc();  
+	let errorMsg = validataFunc();  
 	if (errorMsg) { 
 		alert(errorMsg); 
 		return false; 

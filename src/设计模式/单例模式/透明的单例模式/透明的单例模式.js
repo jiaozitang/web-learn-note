@@ -1,7 +1,7 @@
-var createDiv = (() => {
-	var instance
+let createDiv = (() => {
+	let instance
 
-	var createDiv = (html) => {
+	let createDiv = (html) => {
 		if (instance) {
 			return instance
 		}
@@ -11,7 +11,7 @@ var createDiv = (() => {
 	}
 
 	createDiv.prototype.init = () => {
-		var div = document.createElement('div')
+		let div = document.createElement('div')
 		div.innerHTML = this.html
 		document.body.appendChild(div)
 	}

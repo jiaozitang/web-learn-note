@@ -28,24 +28,24 @@ const rules = {
 }
 
 // 策略类
-var strategies = { 
-	isNonEmpty: function(value, errorMsg) { 
-		if (value === '') { 
-			return errorMsg; 
-		} 
+let strategies = {
+	isNonEmpty: function(value, errorMsg) {
+		if (value === '') {
+			return errorMsg;
+		}
 	},
-	 minLength: function(value, errorMsg, length) { 
+	minLength: function(value, errorMsg, length) {
 		console.log(length)
-		if (value.length < length) { 
-			return errorMsg; 
-		} 
+		if (value.length < length) {
+			return errorMsg;
+		}
 	},
-	 isMobile: function(value, errorMsg) { 
-		if (!/(^1[3|5|8][0-9]{9}$)/.test(value)) { 
-			return errorMsg; 
-		} 
-	} 
-};  
+	isMobile: function(value, errorMsg) {
+		if (!/(^1[3|5|8][0-9]{9}$)/.test(value)) {
+			return errorMsg;
+		}
+	}
+};
 
 // 验证类
 const Validator = function () {

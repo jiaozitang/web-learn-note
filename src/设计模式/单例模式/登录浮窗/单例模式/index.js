@@ -9,7 +9,7 @@ const createLoginLayer = () => {
 }
 
 const createSingle = (function () {
-	var instance = {}
+	let instance = {}
 	return function (fn) {
 		if (!instance[fn.name]) {
 			instance[fn.name] = fn.apply(this, arguments)

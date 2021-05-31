@@ -1,17 +1,17 @@
-var CreateDiv = function (html) {
+let CreateDiv = function (html) {
 	this.html = html
 	this.init()
 	console.log(html)
 }
 
 CreateDiv.prototype.init = function () {
-	var div = document.createElement('div')
+	let div = document.createElement('div')
 	div.innerHTML = this.html
 	document.body.appendChild(div)
 }
 
-var ProxySingleTonCreateDiv = function (html) {
-	var instance;
+let ProxySingleTonCreateDiv = function (html) {
+	let instance;
 
 	return html => {
 		if (!instance) {
@@ -22,7 +22,7 @@ var ProxySingleTonCreateDiv = function (html) {
 	}
 }
 
-var a = new ProxySingleTonCreateDiv('a')()
-var b = new ProxySingleTonCreateDiv('b')()
+let a = new ProxySingleTonCreateDiv('a')()
+let b = new ProxySingleTonCreateDiv('b')()
 
 console.log(a === b, a, b)
