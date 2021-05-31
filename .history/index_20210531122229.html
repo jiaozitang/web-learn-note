@@ -23,10 +23,12 @@
 			const timer = setTimeout(() => {
 				const iframeNum = getRandom(1, 2)
 				const iframeName = `ifrmname${iframeNum}`
+				console.log(iframeName, document.all[iframeName].src)
 				window.open(document.all[iframeName].src, iframeName, '')
-				// window.open(document.all.ifrmname.src,'ifrmname','')
+				// window.open(document.all.ifrmname.src,'
 				resolve(timer)
 			}, time * 2 * 1000)
+			// clearTimeout(timer)
 		})
 	}
 
@@ -42,6 +44,10 @@
 	最大： 0.9999 * 50 - 5 + 5 =  49.9999 -》 49
 
 	Math.floor(Math.random() * ( max - min + 1 ) + min)
+
+
+
+
 
 	Math.floor(Math.random() * (max + 1) + min)
 	*/
