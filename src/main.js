@@ -1,7 +1,7 @@
 // src/main.js
-import foo from './foo.js';
-export default async function () {
-  console.log(foo);
+// import foo from './foo.js';
+async function main () {
+  // console.log(foo);
 
   const a = () => {
     console.log('a')
@@ -10,3 +10,5 @@ export default async function () {
 
   alert(123)
 }
+
+main()

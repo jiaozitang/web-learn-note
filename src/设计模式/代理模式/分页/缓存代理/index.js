@@ -42,9 +42,6 @@
 // proxyGetArticle(2, 10)
 
 // proxyGetArticle(1, 10)
-
-async function a () {
+(async function a () {
   console.log(123)
-}
-
-a()
+})()
