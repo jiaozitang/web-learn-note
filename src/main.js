@@ -1,14 +1,1 @@
-// src/main.js
-// import foo from './foo.js';
-async function main () {
-  // console.log(foo);
-
-  const a = () => {
-    console.log('a')
-  }
-  a()
-
-  alert(123)
-}
-
-main()
+import './设计模式/代理模式/分页/缓存代理'

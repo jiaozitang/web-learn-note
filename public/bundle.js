@@ -766,38 +766,97 @@
 
   var regenerator = runtime.exports;
 
-  // src/main.js
-  // import foo from './foo.js';
-  function main() {
-    return _main.apply(this, arguments);
-  }
+  _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee2() {
+    var getArticle, proxyGetArticle;
+    return regenerator.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            getArticle = function _getArticle(currentPage, pageSize) {
+              console.log('getArticle', currentPage, pageSize); // 模拟一个ajax请求
 
-  function _main() {
-    _main = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee() {
-      var a;
-      return regenerator.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // console.log(foo);
-              a = function a() {
-                console.log('a');
-              };
+              return new Promise(function (resolve, reject) {
+                resolve({
+                  ok: true,
+                  data: {
+                    list: [],
+                    total: 10,
+                    params: {
+                      currentPage: currentPage,
+                      pageSize: pageSize
+                    }
+                  }
+                });
+              });
+            };
 
-              a();
-              alert(123);
+            proxyGetArticle = function () {
+              var caches = [];
+              return /*#__PURE__*/function () {
+                var _ref2 = _asyncToGenerator( /*#__PURE__*/regenerator.mark(function _callee(currentPage, pageSize) {
+                  var cache, _yield$getArticle, data, ok;
 
-            case 3:
-            case "end":
-              return _context.stop();
-          }
+                  return regenerator.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          cache = Array.prototype.join.call([currentPage, pageSize], ',');
+
+                          if (!(cache in caches)) {
+                            _context.next = 3;
+                            break;
+                          }
+
+                          return _context.abrupt("return", caches[cache]);
+
+                        case 3:
+                          _context.next = 5;
+                          return getArticle(currentPage, pageSize);
+
+                        case 5:
+                          _yield$getArticle = _context.sent;
+                          data = _yield$getArticle.data;
+                          ok = _yield$getArticle.ok;
+
+                          if (ok) {
+                            caches[cache] = data;
+                          }
+
+                          return _context.abrupt("return", caches[cache]);
+
+                        case 10:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee);
+                }));
+
+                return function (_x, _x2) {
+                  return _ref2.apply(this, arguments);
+                };
+              }();
+            }(); // 搜索第一页
+
+
+            _context2.next = 4;
+            return proxyGetArticle(1, 10);
+
+          case 4:
+            _context2.next = 6;
+            return proxyGetArticle(2, 10);
+
+          case 6:
+            _context2.next = 8;
+            return proxyGetArticle(1, 10);
+
+          case 8:
+          case "end":
+            return _context2.stop();
         }
-      }, _callee);
-    }));
-    return _main.apply(this, arguments);
-  }
-
-  main();
+      }
+    }, _callee2);
+  }))();
 
 }());
 //# sourceMappingURL=bundle.js.map
