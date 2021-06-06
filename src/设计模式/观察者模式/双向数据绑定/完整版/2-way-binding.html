@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>2-way-binding</title>
+    </head>
+    <body>
+        <form style="width:400px">
+          <fieldset>
+            <legend>User info form:</legend>
+            Name:<br>
+            <input type='text' t-binding="user.name"></input><br/>
+            Age:<br>
+            <input type='text' t-binding="user.age"></input>
+            <button type="button" onclick="user.incAge()">+</button>
+            <button type="button" onclick="user.decAge()">-</button>
+            <br/>
+            Gender:<br>
+            <select t-binding="user.gender">
+                <option disabled selected value></option>
+                <option value="1">Male</option>
+                <option value="2">Female</option>
+            </select>
+          </fieldset>
+        </form>
+
+
+        <br>
+
+        <h3>User info</h3>
+        <strong>
+            Name:
+        </strong>
+        <label t-binding="user.name"></label><br>
+         <strong>
+            Age:
+        </strong>
+        <label t-binding="user.age"></label><br>
+         <strong>
+            Gender:
+        </strong>
+        <label t-binding="user.gender"></label><br>
+    </body>
+
+    <script src="tbinding.js"></script>
+    <script src="user.js"></script>
+</html>
