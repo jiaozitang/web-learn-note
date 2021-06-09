@@ -5,9 +5,7 @@
 </head>
 <body>
 <iframe name="ifrmname1" width="100%" height="200px" id='iframe' src="
-https://juejin.cn/post/6970155121745330206"></iframe>
-<iframe name="ifrmname2" width="100%" height="200px" id='iframe' src="
-https://juejin.cn/post/6970724597029142564"></iframe>
+https://juejin.cn/post/6971822540452790279"></iframe>
 <script type="text/javascript">
 	(async function start(argument) {
 		for (let i = 0; i< 10000; i++) {
@@ -20,7 +18,7 @@ https://juejin.cn/post/6970724597029142564"></iframe>
 		return new Promise((resolve, reject) => {
 			console.log(time)
 			const timer = setTimeout(() => {
-				const iframeNum = getRandom(1, 2)
+				const iframeNum = 1// getRandom(1, 2)
 				const iframeName = `ifrmname${iframeNum}`
 				window.open(document.all[iframeName].src, iframeName, '')
 				// window.open(document.all.ifrmname.src,'ifrmname','')
