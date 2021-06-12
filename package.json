@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "rollup src --file bundle.js --format iife",
-    "dev1": "npx babel src -w -d dist",
+    "dev": "npm run watch",
     "push": "git add . && git commit -m '设计模式'",
     "watch": "rollup -c -w"
   },
