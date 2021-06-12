@@ -6,4 +6,6 @@
 
 // import './设计模式/装饰器模式'
 
-import './设计模式/装饰器模式/index4'
+// import './设计模式/装饰器模式/index4'
+
+import './设计模式/职责链模式/预售订单/index'
