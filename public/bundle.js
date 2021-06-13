@@ -58,7 +58,7 @@
       if (this.status === STATUS.FULFILLED) {
         onFulfilled(this.value);
       } else if (this.status === STATUS.REJECTED) {
-        onRejected(this.error);
+        onRejected(this.reason);
       }
     });
 
