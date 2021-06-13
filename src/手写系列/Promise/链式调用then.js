@@ -119,14 +119,14 @@ function resolvePromise (promise2, x, resolve, reject) {
         }, err => {
           reject(err);// 失败了
         })
+      } else {
+        // 如果 x.then 不是函数
+        resolve(x)
       }
-
-      // 如果 x.then 不是函数
+    } else {
+      // 如果 x 不是 promise 实例
       resolve(x)
     }
-
-    // 如果 x 不是 promise 实例
-    resolve(x)
 }
 
 const mypromise = new MyPromise((resolve, reject) => {
