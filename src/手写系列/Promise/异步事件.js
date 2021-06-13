@@ -136,24 +136,32 @@ function resolvePromise (promise, x, resolve, reject) {
       // 如果 x.then 是函数
       if (typeof then === 'function') {
         let called = false;
-        then.call(x, y => {
-          // resolve的结果依旧是promise 那就继续解析
+        try {
+          then.call(x, y => {
+            // resolve的结果依旧是promise 那就继续解析
+            if (called) return;
+                called = true;
+            resolvePromise(promise, y, resolve, reject);
+          }, err => {
+            if (called) return;
+                called = true;
+            reject(err);// 失败了
+          })
+        } catch (error) {
           if (called) return;
-              called = true;
-          resolvePromise(promise, y, resolve, reject);
-        }, err => {
-          if (called) return;
-              called = true;
-          reject(err);// 失败了
-        })
+          reject(error)
+        }
+      } else {
+              // 如果 x.then 不是函数
+      resolve(x)
       }
 
-      // 如果 x.then 不是函数
+
+    } else {
+      // 如果 x 不是 promise 实例
       resolve(x)
     }
 
-    // 如果 x 不是 promise 实例
-    resolve(x)
 }
 
 const mypromise = new MyPromise((resolve, reject) => {

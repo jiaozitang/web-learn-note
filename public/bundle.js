@@ -200,24 +200,30 @@
 
       if (typeof then === 'function') {
         var called = false;
-        then.call(x, function (y) {
-          // resolve的结果依旧是promise 那就继续解析
-          if (called) return;
-          called = true;
-          resolvePromise(promise, y, resolve, reject);
-        }, function (err) {
-          if (called) return;
-          called = true;
-          reject(err); // 失败了
-        });
-      } // 如果 x.then 不是函数
 
-
+        try {
+          then.call(x, function (y) {
+            // resolve的结果依旧是promise 那就继续解析
+            if (called) return;
+            called = true;
+            resolvePromise(promise, y, resolve, reject);
+          }, function (err) {
+            if (called) return;
+            called = true;
+            reject(err); // 失败了
+          });
+        } catch (error) {
+          if (called) return;
+          reject(error);
+        }
+      } else {
+        // 如果 x.then 不是函数
+        resolve(x);
+      }
+    } else {
+      // 如果 x 不是 promise 实例
       resolve(x);
-    } // 如果 x 不是 promise 实例
-
-
-    resolve(x);
+    }
   }
 
   var mypromise = new MyPromise(function (resolve, reject) {
