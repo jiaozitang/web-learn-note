@@ -74,7 +74,7 @@
       onRejected = typeof onRejected === 'function' ? onRejected : function (error) {
         throw error;
       };
-      return new MyPromise(function (resolve, reject) {
+      var promise2 = new MyPromise(function (resolve, reject) {
         if (_this2.status === STATUS.PENDING) {
           _this2.onFulfilledCallback.push(function () {
             try {
@@ -110,6 +110,7 @@
           }
         }
       });
+      return promise2;
     });
 
     // 执行器
@@ -126,13 +127,24 @@
       reject(new TypeError('The promise and the return value are the same'));
     }
 
-    if (x instanceof MyPromise || x instanceof Object) {
+    if (x instanceof MyPromise) {
+      var then;
+
       try {
-        x = x.then;
+        then = x.then;
       } catch (error) {
         reject(error);
       }
-    } else {
+
+      if (then instanceof Function) {
+        then.call(x, function (y) {
+          // resolve的结果依旧是promise 那就继续解析
+          resolvePromise(promise2, y, resolve, reject);
+        }, function (err) {
+          reject(err); // 失败了
+        });
+      }
+
       resolve(x);
     }
 
@@ -140,11 +152,14 @@
   }
 
   var mypromise = new MyPromise(function (resolve, reject) {
-    resolve(123);
+    resolve('成功');
+  });
+  var mypromise2 = new MyPromise(function (resolve, reject) {
+    resolve('成功2');
   });
   mypromise.then(function (data) {
     console.log(data, '1');
-    return '第一个Promise';
+    return mypromise2;
   }).then(function (data) {
     console.log(data, '2');
   });

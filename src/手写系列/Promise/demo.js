@@ -2,7 +2,7 @@ import MyPromise from './index2'
 
 const mypromise = new MyPromise((resolve, reject) => {
   // setInterval(() => resolve('1'), 1000)
-  resolve(123)
+  resolve('成功')
   // throw new Error('执行器错误')
 })
 

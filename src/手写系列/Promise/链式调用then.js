@@ -57,7 +57,7 @@ class MyPromise {
         onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
         onRejected = typeof onRejected === 'function' ? onRejected : error => { throw error }
       
-        return new MyPromise((resolve, reject) => {
+        const promise2 = new MyPromise((resolve, reject) => {
           if (this.status === STATUS.PENDING) {
               this.onFulfilledCallback.push(() => {
                   try {
@@ -91,6 +91,8 @@ class MyPromise {
               }
           }
         }) 
+
+        return promise2
     }
 }
 
@@ -99,27 +101,38 @@ function resolvePromise (promise2, x, resolve, reject) {
       reject(new TypeError('The promise and the return value are the same'))
     }
 
-    if ( x instanceof MyPromise || x instanceof Object) {
+    if ( x instanceof MyPromise) {
+      let then
       try {
-        x = x.then
+        then = x.then
       } catch (error) {
         reject(error)
       }
 
-    } else {
+      if (then instanceof Function) {
+        then.call(x, y => {
+          // resolve的结果依旧是promise 那就继续解析
+          resolvePromise(promise2, y, resolve, reject);
+        }, err => {
+          reject(err);// 失败了
+        })
+      }
       resolve(x)
     }
-
     resolve(x)
 }
 
 const mypromise = new MyPromise((resolve, reject) => {
-  resolve(123)
+  resolve('成功')
+})
+
+const mypromise2 = new MyPromise((resolve, reject) => {
+  resolve('成功2')
 })
 
 mypromise.then(data => {
   console.log(data, '1')
-  return '第一个Promise'
+  return mypromise2 
 }).then(data => {
   console.log(data, '2')
 })
