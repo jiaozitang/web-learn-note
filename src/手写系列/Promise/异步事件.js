@@ -87,25 +87,13 @@ class MyPromise {
             }) 
           }
 
-          /* if (this.status === STATUS.PENDING) {
+          if (this.status === STATUS.PENDING) {
               this.onFulfilledCallbacks.push(fulfilledMicrotask)
               this.onRejectedCallbacks.push(rejectedMicrotask)
           } else if (this.status === STATUS.FULFILLED) {
             fulfilledMicrotask()
           } else if (this.status === STATUS.REJECTED) {
             rejectedMicrotask()
-          } */
-          // 判断状态
-          if (this.status === STATUS.FULFILLED) {
-            fulfilledMicrotask() 
-          } else if (this.status === STATUS.REJECTED) { 
-            rejectedMicrotask()
-          } else if (this.status === STATUS.PENDING) {
-            // 等待
-            // 因为不知道后面状态的变化情况，所以将成功回调和失败回调存储起来
-            // 等到执行成功失败函数的时候再传递
-            this.onFulfilledCallbacks.push(fulfilledMicrotask);
-            this.onRejectedCallbacks.push(rejectedMicrotask);
           }
         }) 
 
@@ -119,7 +107,7 @@ function resolvePromise (promise, x, resolve, reject) {
       return reject(new TypeError('The promise and the return value are the same'))
     }
 
-    // 如果 x 是 promise 实例
+    // 如果 x 是对象或函数
     if (typeof x === 'object' || typeof x === 'function') {
 
       if (x === null) {

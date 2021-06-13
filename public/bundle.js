@@ -146,28 +146,15 @@
               }
             });
           };
-          /* if (this.status === STATUS.PENDING) {
-              this.onFulfilledCallbacks.push(fulfilledMicrotask)
-              this.onRejectedCallbacks.push(rejectedMicrotask)
-          } else if (this.status === STATUS.FULFILLED) {
-            fulfilledMicrotask()
-          } else if (this.status === STATUS.REJECTED) {
-            rejectedMicrotask()
-          } */
-          // 判断状态
 
-
-          if (_this2.status === STATUS.FULFILLED) {
-            fulfilledMicrotask();
-          } else if (_this2.status === STATUS.REJECTED) {
-            rejectedMicrotask();
-          } else if (_this2.status === STATUS.PENDING) {
-            // 等待
-            // 因为不知道后面状态的变化情况，所以将成功回调和失败回调存储起来
-            // 等到执行成功失败函数的时候再传递
+          if (_this2.status === STATUS.PENDING) {
             _this2.onFulfilledCallbacks.push(fulfilledMicrotask);
 
             _this2.onRejectedCallbacks.push(rejectedMicrotask);
+          } else if (_this2.status === STATUS.FULFILLED) {
+            fulfilledMicrotask();
+          } else if (_this2.status === STATUS.REJECTED) {
+            rejectedMicrotask();
           }
         });
         return promise2;
@@ -181,7 +168,7 @@
     // 如果 promise === x， 执行 reject，错误原因为 TypeError
     if (promise === x) {
       return reject(new TypeError('The promise and the return value are the same'));
-    } // 如果 x 是 promise 实例
+    } // 如果 x 是对象或函数
 
 
     if (_typeof(x) === 'object' || typeof x === 'function') {
