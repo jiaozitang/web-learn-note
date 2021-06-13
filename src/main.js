@@ -8,4 +8,8 @@
 
 // import './设计模式/装饰器模式/index4'
 
-import './设计模式/职责链模式/预售订单/index'
+// import './设计模式/职责链模式/预售订单/index'
+
+// import './手写系列/Promise/demo.js'
+
+import './手写系列/Promise/基本用法.js'

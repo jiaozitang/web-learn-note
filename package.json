@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run watch",
     "push": "git add . && git commit -m '设计模式'",
-    "watch": "rollup -c -w"
+    "watch": "rollup -c -w",
+    "test-promise": "promises-aplus-tests ./src/手写系列/Promise"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "@rollup/plugin-node-resolve": "^13.0.0",
     "deepmerge": "^4.2.2",
     "is-module": "^1.0.0",
+    "promises-aplus-tests": "^2.1.2",
     "rollup": "^2.50.5",
     "rollup-plugin-terser": "^7.0.2"
   },

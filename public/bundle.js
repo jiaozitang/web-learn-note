@@ -1,45 +1,79 @@
 (function () {
   'use strict';
 
-  var Chain = function Chain(fn) {
-    this.fn = fn;
-    this.successor = null;
-  };
-
-  Chain.prototype.setNextSuccessor = function (successor) {
-    return this.successor = successor;
-  };
-
-  Chain.prototype.passRequest = function () {
-    var ret = this.fn.apply(this, arguments);
-
-    if (ret === 'nextSuccessor') {
-      return this.successor && this.successor.passRequest.apply(this.successor, arguments);
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
     }
+  }
 
-    return ret;
-  };
-
-  var order500 = function order500(orderType) {
-    if (orderType === 500) {
-      console.log('已预付500定金，享有100优惠券');
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
     } else {
-      return 'nextSuccessor';
+      obj[key] = value;
     }
+
+    return obj;
+  }
+
+  // Promise 的 3 种状态
+  var STATUS = {
+    PENDING: 'pending',
+    FULFILLED: 'fulfilled',
+    REJECTED: 'rejected'
   };
 
-  var order200 = function order200(orderType) {
-    if (orderType === 200) {
-      console.log('已预付200定金，享有50元优惠券');
-    } else {
-      return 'nextSuccessor';
-    }
-  };
+  var MyPromise = function MyPromise(executor) {
+    var _this = this;
 
-  var chainOrder500 = new Chain(order500);
-  var chainOrder200 = new Chain(order200);
-  chainOrder500.setNextSuccessor(chainOrder200);
-  chainOrder500.passRequest(200);
+    _classCallCheck(this, MyPromise);
+
+    _defineProperty(this, "status", STATUS.PENDING);
+
+    _defineProperty(this, "value", null);
+
+    _defineProperty(this, "reason", null);
+
+    _defineProperty(this, "resolve", function (value) {
+      if (_this.status === STATUS.PENDING) {
+        _this.status = STATUS.FULFILLED;
+        _this.value = value;
+      }
+    });
+
+    _defineProperty(this, "reject", function () {
+      if (_this.status === STATUS.PENDING) {
+        _this.status = STATUS.REJECTED;
+        _this.reason = value;
+      }
+    });
+
+    _defineProperty(this, "then", function (onFulfilled, onRejected) {
+      if (this.status === STATUS.FULFILLED) {
+        onFulfilled(this.value);
+      } else if (this.status === STATUS.REJECTED) {
+        onRejected(this.error);
+      }
+    });
+
+    // 执行器
+    executor(this.resolve, this.reject);
+  } // 初始状态
+  ;
+  var mypromise = new MyPromise(function (resolve, reject) {
+    resolve('成功');
+  });
+  mypromise.then(function (data) {
+    console.log(data, '请求成功'); // 成功打印“成功 请求成功”
+  }, function (err) {
+    console.log(err, '请求失败');
+  });
 
 }());
 //# sourceMappingURL=bundle.js.map
