@@ -12,4 +12,4 @@
 
 // import './手写系列/Promise/demo.js'
 
-import './手写系列/Promise/基本用法.js'
+import './手写系列/Promise/多次调用then'

@@ -34,6 +34,10 @@
 
     _classCallCheck(this, MyPromise);
 
+    _defineProperty(this, "onFulfilledCallback", []);
+
+    _defineProperty(this, "onRejectedCallback", []);
+
     _defineProperty(this, "status", STATUS.PENDING);
 
     _defineProperty(this, "value", null);
@@ -44,18 +48,36 @@
       if (_this.status === STATUS.PENDING) {
         _this.status = STATUS.FULFILLED;
         _this.value = value;
+
+        while (_this.onFulfilledCallback.length) {
+          _this.onFulfilledCallback.shift()(value);
+        }
       }
     });
 
-    _defineProperty(this, "reject", function () {
+    _defineProperty(this, "reject", function (value) {
       if (_this.status === STATUS.PENDING) {
         _this.status = STATUS.REJECTED;
         _this.reason = value;
+
+        while (_this.onRejectedCallback.length) {
+          _this.onRejectedCallback.shift()(value);
+        }
       }
     });
 
     _defineProperty(this, "then", function (onFulfilled, onRejected) {
-      if (this.status === STATUS.FULFILLED) {
+      onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (value) {
+        return value;
+      };
+      onRejected = typeof onRejected === 'function' ? onRejected : function (reason) {
+        throw reason;
+      };
+
+      if (this.status === STATUS.PENDING) {
+        this.onFulfilledCallback.push(onFulfilled);
+        this.onRejectedCallback.push(onRejected);
+      } else if (this.status === STATUS.FULFILLED) {
         onFulfilled(this.value);
       } else if (this.status === STATUS.REJECTED) {
         onRejected(this.reason);
@@ -63,16 +85,22 @@
     });
 
     // 执行器
-    executor(this.resolve, this.reject);
-  } // 初始状态
+    try {
+      executor(this.resolve, this.reject);
+    } catch (reason) {
+      this.reject(reason);
+    }
+  } // 成功回调
   ;
+
   var mypromise = new MyPromise(function (resolve, reject) {
     resolve('成功');
   });
   mypromise.then(function (data) {
-    console.log(data, '请求成功'); // 成功打印“成功 请求成功”
-  }, function (err) {
-    console.log(err, '请求失败');
+    console.log(data, '1');
+  });
+  mypromise.then(function (data) {
+    console.log(data, '2');
   });
 
 }());

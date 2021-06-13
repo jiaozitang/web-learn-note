@@ -27,7 +27,7 @@ class MyPromise {
   value = null
   
   // 失败返回值
-  error = null
+  resolve = null
   
   // 修改 Promise 状态，并定义成功返回值
   resolve = value => {
@@ -45,7 +45,7 @@ class MyPromise {
     reject = value => {
         if (this.status === STATUS.PENDING) {
             this.status = STATUS.REJECTED
-            this.error = value
+            this.reason = value
 
             while(this.onRejectedCallback.length) {
                 this.onRejectedCallback.shift()(value)
@@ -56,7 +56,6 @@ class MyPromise {
     then = function (onFulfilled, onRejected) {
         onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
         onRejected = typeof onRejected === 'function' ? onRejected : error => { throw error }
-      
       
         return new MyPromise((resolve, reject) => {
           if (this.status === STATUS.PENDING) {
@@ -85,7 +84,7 @@ class MyPromise {
               }
           } else if (this.status === STATUS.REJECTED) {
               try {
-                  const x = onRejected(this.error)
+                  const x = onRejected(this.reason)
                   resolvePromise(x, resolve, reject)
               } catch (error) {
                   reject(error)
@@ -93,25 +92,6 @@ class MyPromise {
           }
         }) 
     }
-    static resolve = function (fn) {
-        if (fn instanceof MyPromise) {
-            return fn
-        }
-
-        return new MyPromise(resolve => {
-            fn = typeof fn === 'function' ? fn : fn => fn
-            resolve(fn())
-        })
-    }
-    
-    static reject = function (fn) {
-        return new MyPromise((resolve, reject) => {
-            fn = typeof fn === 'function' ? fn : fn => {throw fn}
-            reject(fn())
-        })
-    }
-
-
 }
 
 function resolvePromise (x, resolve, reject) {
@@ -122,14 +102,4 @@ function resolvePromise (x, resolve, reject) {
     }
 }
 
-MyPromise.deferred = function () {
-    var result = {};
-    result.promise = new MyPromise(function (resolve, reject) {
-        result.resolve = resolve;
-        result.reject = reject;
-    });
-
-    return result;
-}
-module.exports = MyPromise;
   

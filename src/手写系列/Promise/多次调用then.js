@@ -1,10 +1,11 @@
+// Promise 的 3 种状态
 const STATUS = {
   PENDING: 'pending',
   FULFILLED: 'fulfilled',
   REJECTED: 'rejected'
 }
 
-export default class MyPromise {
+class MyPromise {
   constructor (executor) {
       // 执行器
       try {
@@ -54,49 +55,27 @@ export default class MyPromise {
     }
 
     then = function (onFulfilled, onRejected) {
-        // 返回 MyPromise实例
-      const promise2 = new MyPromise((resolve, reject) => {
+        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
+        onRejected = typeof onRejected === 'function' ? onRejected : reason => { throw reason }
         if (this.status === STATUS.PENDING) {
-            this.onFulfilledCallback.push(() => {
-                const x = onFulfilled(this.value)
-                resolvePromise(x, resolve, reject)
-            })
-            this.onRejectedCallback.push(() => {
-                const x = onRejected(this.value)
-                resolvePromise(x, resolve, reject)
-            })
+          this.onFulfilledCallback.push(onFulfilled)
+          this.onRejectedCallback.push(onRejected)
         } else if (this.status === STATUS.FULFILLED) {
-            const x = onFulfilled(this.value)
-            resolvePromise(x, resolve, reject)
+            onFulfilled(this.value)
         } else if (this.status === STATUS.REJECTED) {
-            const x = onRejected(this.error)
-            resolvePromise(x, resolve, reject)
+            onRejected(this.reason)
         }
-      }) 
-
-      return promise2
     }
-    static resolve = function (fn) {
-        if (fn instanceof MyPromise) {
-            return fn
-        }
-
-        return new MyPromise(resolve => {
-            fn = typeof fn === 'function' ? fn : fn => fn
-            resolve(fn())
-        })
-        使用 onFulfilledCallback 存储 onFulfilled，onRejectedCallback存储 
-    }
-    
-    static reject = function (fn) {
-        return new MyPromise((resolve, reject) => {
-            fn = typeof fn === 'function' ? fn : fn => {throw fn}
-            reject(fn())
-        })
-    }
-
-
 }
 
+const mypromise = new MyPromise((resolve, reject) => {
+  resolve('成功')
+})
 
-  
+mypromise.then(data => {
+  console.log(data, '1')
+})
+
+mypromise.then(data => {
+  console.log(data, '2')
+})
