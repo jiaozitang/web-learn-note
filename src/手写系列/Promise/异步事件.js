@@ -152,11 +152,9 @@ function resolvePromise (promise, x, resolve, reject) {
           reject(error)
         }
       } else {
-              // 如果 x.then 不是函数
-      resolve(x)
+        // 如果 x.then 不是函数
+        resolve(x)
       }
-
-
     } else {
       // 如果 x 不是 promise 实例
       resolve(x)
@@ -165,11 +163,11 @@ function resolvePromise (promise, x, resolve, reject) {
 }
 
 const mypromise = new MyPromise((resolve, reject) => {
-  resolve('成功')
+  setTimeout(() => resolve('成功'), 1000)
 })
 
 const mypromise2 = new MyPromise((resolve, reject) => {
-  resolve('成功2')
+  setTimeout(() => resolve('成功2'), 1000)
 })
 
 mypromise.then(data => {

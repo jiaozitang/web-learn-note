@@ -227,10 +227,14 @@
   }
 
   var mypromise = new MyPromise(function (resolve, reject) {
-    resolve('成功');
+    setTimeout(function () {
+      return resolve('成功');
+    }, 1000);
   });
   var mypromise2 = new MyPromise(function (resolve, reject) {
-    resolve('成功2');
+    setTimeout(function () {
+      return resolve('成功2');
+    }, 1000);
   });
   mypromise.then(function (data) {
     console.log(data, '1');
