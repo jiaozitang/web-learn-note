@@ -1,6 +1,22 @@
 (function () {
   'use strict';
 
+  function _typeof(obj) {
+    "@babel/helpers - typeof";
+
+    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+      _typeof = function _typeof(obj) {
+        return typeof obj;
+      };
+    } else {
+      _typeof = function _typeof(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+    }
+
+    return _typeof(obj);
+  }
+
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
       throw new TypeError("Cannot call a class as a function");
@@ -123,30 +139,35 @@
   ;
 
   function resolvePromise(promise2, x, resolve, reject) {
+    // 如果 promise2 === x， 执行 reject，错误原因为 TypeError
     if (promise2 === x) {
       reject(new TypeError('The promise and the return value are the same'));
-    }
+    } // 如果 x 是 promise 实例
 
-    if (x instanceof MyPromise) {
+
+    if (_typeof(x) === 'object' || typeof x === 'function') {
       var then;
 
       try {
         then = x.then;
       } catch (error) {
         reject(error);
-      }
+      } // 如果 x.then 是函数
 
-      if (then instanceof Function) {
+
+      if (typeof then === 'function') {
         then.call(x, function (y) {
           // resolve的结果依旧是promise 那就继续解析
           resolvePromise(promise2, y, resolve, reject);
         }, function (err) {
           reject(err); // 失败了
         });
-      }
+      } // 如果 x.then 不是函数
+
 
       resolve(x);
-    }
+    } // 如果 x 不是 promise 实例
+
 
     resolve(x);
   }

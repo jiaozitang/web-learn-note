@@ -8,7 +8,7 @@
     "dev": "npm run watch",
     "push": "git add . && git commit -m '手写系列'",
     "watch": "rollup -c -w",
-    "test-promise": "promises-aplus-tests ./src/手写系列/Promise"
+    "test:promise": "promises-aplus-tests ./src/手写系列/Promise/testPromise"
   },
   "repository": {
     "type": "git",

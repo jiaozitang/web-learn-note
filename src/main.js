@@ -14,4 +14,6 @@
 
 // import './手写系列/Promise/多次调用then'
 
+// import './手写系列/Promise/异步事件'
+
 import './手写系列/Promise/链式调用then'

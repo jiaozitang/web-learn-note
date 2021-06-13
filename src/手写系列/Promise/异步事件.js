@@ -54,41 +54,46 @@ class MyPromise {
     }
 
     then = function (onFulfilled, onRejected) {
-        onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
-        onRejected = typeof onRejected === 'function' ? onRejected : error => { throw error }
+        const realOnFulfilled = typeof onFulfilled === 'function' ? onFulfilled : value => value
+        const realOnRejected = typeof onRejected === 'function' ? onRejected : error => { throw error }
       
         const promise2 = new MyPromise((resolve, reject) => {
+          
+          const fulfilledMicrotask = () =>  {
+          // 创建一个微任务等待 promise2 完成初始化
+          queueMicrotask(() => {
+            try {
+              // 获取成功回调函数的执行结果
+              const x = realOnFulfilled(this.value);
+              // 传入 resolvePromise 集中处理
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (error) {
+              reject(error)
+            } 
+          })  
+        }
+  
+        const rejectedMicrotask = () => { 
+          // 创建一个微任务等待 promise2 完成初始化
+          queueMicrotask(() => {
+            try {
+              // 调用失败回调，并且把原因返回
+              const x = realOnRejected(this.reason);
+              // 传入 resolvePromise 集中处理
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (error) {
+              reject(error)
+            } 
+          }) 
+        }
+
           if (this.status === STATUS.PENDING) {
-              this.onFulfilledCallback.push(() => {
-                  try {
-                      const x = onFulfilled(this.value)
-                      resolvePromise(promise2, x, resolve, reject)
-                  } catch (error) {
-                      reject(error)
-                  }
-              })
-              this.onRejectedCallback.push(() => {
-                  try {
-                      const x = onRejected(this.value)
-                      resolvePromise(promise2, x, resolve, reject)
-                  } catch (error) {
-                      reject(error)
-                  }
-              })
+              this.onFulfilledCallback.push(fulfilledMicrotask)
+              this.onRejectedCallback.push(rejectedMicrotask)
           } else if (this.status === STATUS.FULFILLED) {
-              try {
-                  const x = onFulfilled(this.value)
-                  resolvePromise(promise2, x, resolve, reject)
-              } catch (error) {
-                  reject(error)
-              }
+            fulfilledMicrotask()
           } else if (this.status === STATUS.REJECTED) {
-              try {
-                  const x = onRejected(this.reason)
-                  resolvePromise(promise2, x, resolve, reject)
-              } catch (error) {
-                  reject(error)
-              }
+            rejectedMicrotask()
           }
         }) 
 
@@ -130,7 +135,7 @@ function resolvePromise (promise2, x, resolve, reject) {
 }
 
 const mypromise = new MyPromise((resolve, reject) => {
-  resolve('成功')
+  setTimeout(() => resolve('成功'), 2000)
 })
 
 const mypromise2 = new MyPromise((resolve, reject) => {
