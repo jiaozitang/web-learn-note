@@ -113,27 +113,37 @@ class MyPromise {
     }
 }
 
-function resolvePromise (promise2, x, resolve, reject) {
-  // 如果 promise2 === x， 执行 reject，错误原因为 TypeError
-    if (promise2 === x) {
-      reject(new TypeError('The promise and the return value are the same'))
+function resolvePromise (promise, x, resolve, reject) {
+  // 如果 promise === x， 执行 reject，错误原因为 TypeError
+    if (promise === x) {
+      return reject(new TypeError('The promise and the return value are the same'))
     }
 
     // 如果 x 是 promise 实例
     if (typeof x === 'object' || typeof x === 'function') {
+
+      if (x === null) {
+        return resolve(x);
+      }
+
       let then
       try {
         then = x.then
       } catch (error) {
-        reject(error)
+        return reject(error)
       }
 
       // 如果 x.then 是函数
       if (typeof then === 'function') {
+        let called = false;
         then.call(x, y => {
           // resolve的结果依旧是promise 那就继续解析
-          resolvePromise(promise2, y, resolve, reject);
+          if (called) return;
+              called = true;
+          resolvePromise(promise, y, resolve, reject);
         }, err => {
+          if (called) return;
+              called = true;
           reject(err);// 失败了
         })
       }
