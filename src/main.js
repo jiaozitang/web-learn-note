@@ -12,4 +12,6 @@
 
 // import './手写系列/Promise/demo.js'
 
-import './手写系列/Promise/多次调用then'
+// import './手写系列/Promise/多次调用then'
+
+import './手写系列/Promise/链式调用then'

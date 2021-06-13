@@ -22,7 +22,6 @@
     return obj;
   }
 
-  // Promise 的 3 种状态
   var STATUS = {
     PENDING: 'pending',
     FULFILLED: 'fulfilled',
@@ -42,7 +41,7 @@
 
     _defineProperty(this, "value", null);
 
-    _defineProperty(this, "reason", null);
+    _defineProperty(this, "resolve", null);
 
     _defineProperty(this, "resolve", function (value) {
       if (_this.status === STATUS.PENDING) {
@@ -67,39 +66,86 @@
     });
 
     _defineProperty(this, "then", function (onFulfilled, onRejected) {
+      var _this2 = this;
+
       onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (value) {
         return value;
       };
-      onRejected = typeof onRejected === 'function' ? onRejected : function (reason) {
-        throw reason;
+      onRejected = typeof onRejected === 'function' ? onRejected : function (error) {
+        throw error;
       };
+      return new MyPromise(function (resolve, reject) {
+        if (_this2.status === STATUS.PENDING) {
+          _this2.onFulfilledCallback.push(function () {
+            try {
+              var x = onFulfilled(_this2.value);
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (error) {
+              reject(error);
+            }
+          });
 
-      if (this.status === STATUS.PENDING) {
-        this.onFulfilledCallback.push(onFulfilled);
-        this.onRejectedCallback.push(onRejected);
-      } else if (this.status === STATUS.FULFILLED) {
-        onFulfilled(this.value);
-      } else if (this.status === STATUS.REJECTED) {
-        onRejected(this.reason);
-      }
+          _this2.onRejectedCallback.push(function () {
+            try {
+              var x = onRejected(_this2.value);
+              resolvePromise(promise2, x, resolve, reject);
+            } catch (error) {
+              reject(error);
+            }
+          });
+        } else if (_this2.status === STATUS.FULFILLED) {
+          try {
+            var x = onFulfilled(_this2.value);
+            resolvePromise(promise2, x, resolve, reject);
+          } catch (error) {
+            reject(error);
+          }
+        } else if (_this2.status === STATUS.REJECTED) {
+          try {
+            var _x = onRejected(_this2.reason);
+
+            resolvePromise(promise2, _x, resolve, reject);
+          } catch (error) {
+            reject(error);
+          }
+        }
+      });
     });
 
     // 执行器
     try {
       executor(this.resolve, this.reject);
-    } catch (reason) {
-      this.reject(reason);
+    } catch (error) {
+      this.reject(error);
     }
   } // 成功回调
   ;
 
+  function resolvePromise(promise2, x, resolve, reject) {
+    if (promise2 === x) {
+      reject(new TypeError('The promise and the return value are the same'));
+    }
+
+    if (x instanceof MyPromise || x instanceof Object) {
+      try {
+        x = x.then;
+      } catch (error) {
+        reject(error);
+      }
+    } else {
+      resolve(x);
+    }
+
+    resolve(x);
+  }
+
   var mypromise = new MyPromise(function (resolve, reject) {
-    resolve('成功');
+    resolve(123);
   });
   mypromise.then(function (data) {
     console.log(data, '1');
-  });
-  mypromise.then(function (data) {
+    return '第一个Promise';
+  }).then(function (data) {
     console.log(data, '2');
   });
 

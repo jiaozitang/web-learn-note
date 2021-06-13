@@ -95,7 +95,31 @@ class MyPromise {
 }
 
 function resolvePromise (promise2, x, resolve, reject) {
-    
+    if (promise2 === x) {
+      reject(new TypeError('The promise and the return value are the same'))
+    }
+
+    if ( x instanceof MyPromise || x instanceof Object) {
+      try {
+        x = x.then
+      } catch (error) {
+        reject(error)
+      }
+
+    } else {
+      resolve(x)
+    }
+
+    resolve(x)
 }
 
-  
+const mypromise = new MyPromise((resolve, reject) => {
+  resolve(123)
+})
+
+mypromise.then(data => {
+  console.log(data, '1')
+  return '第一个Promise'
+}).then(data => {
+  console.log(data, '2')
+})

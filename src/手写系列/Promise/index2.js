@@ -85,7 +85,6 @@ export default class MyPromise {
             fn = typeof fn === 'function' ? fn : fn => fn
             resolve(fn())
         })
-        使用 onFulfilledCallback 存储 onFulfilled，onRejectedCallback存储 
     }
     
     static reject = function (fn) {
