@@ -23,6 +23,22 @@
     }
   }
 
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
   function _defineProperty(obj, key, value) {
     if (key in obj) {
       Object.defineProperty(obj, key, {
@@ -44,99 +60,122 @@
     REJECTED: 'rejected'
   };
 
-  var MyPromise = function MyPromise(executor) {
-    var _this = this;
+  var MyPromise = /*#__PURE__*/function () {
+    function MyPromise(executor) {
+      var _this = this;
 
-    _classCallCheck(this, MyPromise);
+      _classCallCheck(this, MyPromise);
 
-    _defineProperty(this, "onFulfilledCallback", []);
+      _defineProperty(this, "onFulfilledCallbacks", []);
 
-    _defineProperty(this, "onRejectedCallback", []);
+      _defineProperty(this, "onRejectedCallbacks", []);
 
-    _defineProperty(this, "status", STATUS.PENDING);
+      _defineProperty(this, "status", STATUS.PENDING);
 
-    _defineProperty(this, "value", null);
+      _defineProperty(this, "value", null);
 
-    _defineProperty(this, "resolve", null);
+      _defineProperty(this, "resolve", null);
 
-    _defineProperty(this, "resolve", function (value) {
-      if (_this.status === STATUS.PENDING) {
-        _this.status = STATUS.FULFILLED;
-        _this.value = value;
+      _defineProperty(this, "resolve", function (value) {
+        if (_this.status === STATUS.PENDING) {
+          _this.status = STATUS.FULFILLED;
+          _this.value = value;
 
-        while (_this.onFulfilledCallback.length) {
-          _this.onFulfilledCallback.shift()(value);
-        }
-      }
-    });
-
-    _defineProperty(this, "reject", function (value) {
-      if (_this.status === STATUS.PENDING) {
-        _this.status = STATUS.REJECTED;
-        _this.reason = value;
-
-        while (_this.onRejectedCallback.length) {
-          _this.onRejectedCallback.shift()(value);
-        }
-      }
-    });
-
-    _defineProperty(this, "then", function (onFulfilled, onRejected) {
-      var _this2 = this;
-
-      onFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (value) {
-        return value;
-      };
-      onRejected = typeof onRejected === 'function' ? onRejected : function (error) {
-        throw error;
-      };
-      var promise2 = new MyPromise(function (resolve, reject) {
-        if (_this2.status === STATUS.PENDING) {
-          _this2.onFulfilledCallback.push(function () {
-            try {
-              var x = onFulfilled(_this2.value);
-              resolvePromise(promise2, x, resolve, reject);
-            } catch (error) {
-              reject(error);
-            }
-          });
-
-          _this2.onRejectedCallback.push(function () {
-            try {
-              var x = onRejected(_this2.value);
-              resolvePromise(promise2, x, resolve, reject);
-            } catch (error) {
-              reject(error);
-            }
-          });
-        } else if (_this2.status === STATUS.FULFILLED) {
-          try {
-            var x = onFulfilled(_this2.value);
-            resolvePromise(promise2, x, resolve, reject);
-          } catch (error) {
-            reject(error);
-          }
-        } else if (_this2.status === STATUS.REJECTED) {
-          try {
-            var _x = onRejected(_this2.reason);
-
-            resolvePromise(promise2, _x, resolve, reject);
-          } catch (error) {
-            reject(error);
+          while (_this.onFulfilledCallbacks.length) {
+            _this.onFulfilledCallbacks.shift()(value);
           }
         }
       });
-      return promise2;
-    });
 
-    // 执行器
-    try {
-      executor(this.resolve, this.reject);
-    } catch (error) {
-      this.reject(error);
-    }
-  } // 成功回调
-  ;
+      _defineProperty(this, "reject", function (value) {
+        if (_this.status === STATUS.PENDING) {
+          _this.status = STATUS.REJECTED;
+          _this.reason = value;
+
+          while (_this.onRejectedCallbacks.length) {
+            _this.onRejectedCallbacks.shift()(value);
+          }
+        }
+      });
+
+      // 执行器
+      try {
+        executor(this.resolve, this.reject);
+      } catch (error) {
+        this.reject(error);
+      }
+    } // 成功回调
+
+
+    _createClass(MyPromise, [{
+      key: "then",
+      value: function then(onFulfilled, onRejected) {
+        var _this2 = this;
+
+        var realOnFulfilled = typeof onFulfilled === 'function' ? onFulfilled : function (value) {
+          return value;
+        };
+        var realOnRejected = typeof onRejected === 'function' ? onRejected : function (error) {
+          throw error;
+        };
+        var promise2 = new MyPromise(function (resolve, reject) {
+          var fulfilledMicrotask = function fulfilledMicrotask() {
+            // 创建一个微任务等待 promise2 完成初始化
+            queueMicrotask(function () {
+              try {
+                // 获取成功回调函数的执行结果
+                var x = realOnFulfilled(_this2.value); // 传入 resolvePromise 集中处理
+
+                resolvePromise(promise2, x, resolve, reject);
+              } catch (error) {
+                reject(error);
+              }
+            });
+          };
+
+          var rejectedMicrotask = function rejectedMicrotask() {
+            // 创建一个微任务等待 promise2 完成初始化
+            queueMicrotask(function () {
+              try {
+                // 调用失败回调，并且把原因返回
+                var x = realOnRejected(_this2.reason); // 传入 resolvePromise 集中处理
+
+                resolvePromise(promise2, x, resolve, reject);
+              } catch (error) {
+                reject(error);
+              }
+            });
+          };
+          /* if (this.status === STATUS.PENDING) {
+              this.onFulfilledCallbacks.push(fulfilledMicrotask)
+              this.onRejectedCallbacks.push(rejectedMicrotask)
+          } else if (this.status === STATUS.FULFILLED) {
+            fulfilledMicrotask()
+          } else if (this.status === STATUS.REJECTED) {
+            rejectedMicrotask()
+          } */
+          // 判断状态
+
+
+          if (_this2.status === STATUS.FULFILLED) {
+            fulfilledMicrotask();
+          } else if (_this2.status === STATUS.REJECTED) {
+            rejectedMicrotask();
+          } else if (_this2.status === STATUS.PENDING) {
+            // 等待
+            // 因为不知道后面状态的变化情况，所以将成功回调和失败回调存储起来
+            // 等到执行成功失败函数的时候再传递
+            _this2.onFulfilledCallbacks.push(fulfilledMicrotask);
+
+            _this2.onRejectedCallbacks.push(rejectedMicrotask);
+          }
+        });
+        return promise2;
+      }
+    }]);
+
+    return MyPromise;
+  }();
 
   function resolvePromise(promise2, x, resolve, reject) {
     // 如果 promise2 === x， 执行 reject，错误原因为 TypeError
