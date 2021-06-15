@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "rollup src --file bundle.js --format iife",
-    "dev1": "npx babel src -w -d dist",
-    "push": "git add . && git commit -m '设计模式'",
-    "watch": "rollup -c -w"
+    "dev": "npm run watch",
+    "push": "git add . && git commit -m '手写系列'",
+    "watch": "rollup -c -w",
+    "test:promise": "promises-aplus-tests ./src/手写系列/Promise/testPromise"
   },
   "repository": {
     "type": "git",
@@ -27,10 +27,14 @@
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
+    "deepmerge": "^4.2.2",
+    "is-module": "^1.0.0",
+    "promises-aplus-tests": "^2.1.2",
     "rollup": "^2.50.5",
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "simple-virtual-dom": "^0.1.10"
+    "simple-virtual-dom": "^0.1.10",
+    "lodash": "^4.17.21"
   }
 }
