@@ -93,7 +93,7 @@
 
     this.tagName = tagName;
     this.props = props;
-    this.children = [];
+    this.children = children;
     var _this$props$key = this.props.key,
         key = _this$props$key === void 0 ? 666 : _this$props$key;
     this.key = key;
@@ -102,7 +102,7 @@
       if (child instanceof Element) {
         count += child.count;
       } else {
-        children[i] = child.toString();
+        children[index] = child.toString();
       }
 
       count++;
