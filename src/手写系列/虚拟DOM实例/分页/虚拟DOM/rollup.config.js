@@ -8,7 +8,7 @@ import { babel } from '@rollup/plugin-babel';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/index.js',
+	input: 'index.js',
 	output: {
 		file: 'public/bundle.js',
 		format: 'iife', // immediately-invoked function expression — suitable for <script> tags
@@ -20,7 +20,6 @@ export default {
     production && terser(), // minify, but only in production
     babel({ 
 		babelHelpers: 'runtime',
-		"presets": ["@babel/preset-react"],
 		"plugins": ["@babel/plugin-transform-runtime"]
 	})
 	]
