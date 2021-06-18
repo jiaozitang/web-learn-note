@@ -10,7 +10,9 @@
 
       _.oButton = document.getElementById('btn'); // 消耗时间 节点
 
-      _.oTime = document.getElementById('time');
+      _.oTime = document.getElementById('time'); // 文章模拟 节点
+
+      _.oHtml = document.getElementById('html');
 
       var btnList = _.oButton.getElementsByTagName('button');
 
@@ -35,7 +37,17 @@
       var data = getData({
         page: page
       });
+      handleDom(data);
+      var endTime = new Date().getTime();
+      var time = endTime - startTime;
+      showTimeOnPage(time);
+    }
 
+    function showTimeOnPage(time) {
+      _.oTime.innerHTML = time;
+    }
+
+    function handleDom(data) {
       var ulChildren = _.oUl.getElementsByTagName('li');
 
       Array.from(ulChildren).forEach(function (item) {
@@ -43,20 +55,17 @@
       });
       data.forEach(function (dataItem, index) {
         var li = document.createElement('li');
-        li.innerHTML = "".concat(index, "-").concat(dataItem);
+        li.innerHTML = "".concat(index, "-").concat(dataItem).concat(_.oHtml);
 
         _.oUl.appendChild(li);
       });
-      var endTime = new Date().getTime();
-      var time = endTime - startTime;
-      _.oTime.innerHTML = time;
     } // 获取某一页的数据
 
 
     function getData(_ref2) {
       var page = _ref2.page,
           _ref2$pageSize = _ref2.pageSize,
-          pageSize = _ref2$pageSize === void 0 ? 5000 : _ref2$pageSize;
+          pageSize = _ref2$pageSize === void 0 ? 20 : _ref2$pageSize;
       var list = [];
       list.length = pageSize;
       return list.fill(page);
