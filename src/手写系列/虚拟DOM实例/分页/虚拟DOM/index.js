@@ -197,6 +197,16 @@ class LikeButton extends React.Component {
   // 在线babel转义
   render() {
     const { data, time } = this.state
+    console.log(e("div", {
+      className: 'box'
+    }, 
+    e("p", null, "文本")
+    ))
+    return (e("div", {
+      className: 'box'
+    }, 
+    e("p", null, "文本")
+    ))
     return (
       e("div", null, 
         e("p", null, "分页消耗时长：", 

@@ -35,7 +35,8 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
-    "simple-virtual-dom": "^0.1.10",
-    "lodash": "^4.17.21"
+    "list-diff2": "^0.1.4",
+    "lodash": "^4.17.21",
+    "simple-virtual-dom": "^0.1.10"
   }
 }
