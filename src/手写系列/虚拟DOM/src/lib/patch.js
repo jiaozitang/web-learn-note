@@ -30,25 +30,24 @@ function dfsWalk (node, walker, patches) {
 function applyPatches (node, currentPatches) {
   _.each(currentPatches, function (currentPatch) {
     switch (currentPatch.type) {
+      // 替换 diff
       case REPLACE:
         var newNode = (typeof currentPatch.node === 'string')
           ? document.createTextNode(currentPatch.node)
           : currentPatch.node.render()
         node.parentNode.replaceChild(newNode, node)
         break
+      // 子节点重新排序 diff
       case REORDER:
         reorderChildren(node, currentPatch.moves)
         break
+      // 属性 diff
       case PROPS:
         setProps(node, currentPatch.props)
         break
+      // 文本节点 diff
       case TEXT:
-        if (node.textContent) {
-          node.textContent = currentPatch.content
-        } else {
-          // fuck ie
-          node.nodeValue = currentPatch.content
-        }
+        node.textContent = currentPatch.content
         break
       default:
         throw new Error('Unknown patch type ' + currentPatch.type)
