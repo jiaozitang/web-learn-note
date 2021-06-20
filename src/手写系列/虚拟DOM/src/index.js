@@ -32,8 +32,7 @@ document.body.appendChild(root)
 setInterval(() => {
     const newTree = renderTree()
     const patches = diff(tree, newTree)
-    console.log(patches)
     patch(root, patches)
 
     tree = newTree
-}, 1000)
+}, 2000)

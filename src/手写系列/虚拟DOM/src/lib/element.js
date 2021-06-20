@@ -1,62 +1,67 @@
-import _ from './util'
+var _ = require('./util')
 
-function Element (tagName, props = {}, children = []) {
+/**
+ * Virtual-dom Element.
+ * @param {String} tagName
+ * @param {Object} props - Element's properties,
+ *                       - using object to store key-value pair
+ * @param {Array<Element|String>} - This element's children elements.
+ *                                - Can be Element instance or just a piece plain text.
+ */
+function Element (tagName, props, children) {
   if (!(this instanceof Element)) {
-    if (!(children instanceof Array) && children !== null) {
-      children = children.slice(2).filter(i => i)
+    if (!_.isArray(children) && children != null) {
+      children = _.slice(arguments, 2).filter(_.truthy)
     }
-
     return new Element(tagName, props, children)
   }
 
-  if (props instanceof Array) {
+  if (_.isArray(props)) {
     children = props
     props = {}
   }
 
-  
   this.tagName = tagName
-  this.props = props
-  this.children = children
-  const { key = 666 } = this.props
-  this.key = key
+  this.props = props || {}
+  this.children = children || []
+  this.key = props
+    ? props.key
+    : void 666
 
-  let count = 0
+  var count = 0
 
-  this.children.forEach((child, index) => {
+  _.each(this.children, function (child, i) {
     if (child instanceof Element) {
       count += child.count
     } else {
-      children[index] = child.toString()
+      children[i] = '' + child
     }
-
     count++
   })
 
   this.count = count
 }
 
+/**
+ * Render the hold element tree.
+ */
 Element.prototype.render = function () {
-  const el = document.createElement(this.tagName)
-  const props = this.props
+  var el = document.createElement(this.tagName)
+  var props = this.props
 
-  for (const propName in props) {
-    const propValue = props[propName]
+  for (var propName in props) {
+    var propValue = props[propName]
     _.setAttr(el, propName, propValue)
   }
 
-  this.children.forEach((child) => {
-    let childEl
-
-    if (child instanceof Element) {
-      childEl = child.render()
-    } else {
-      childEl = document.createTextNode(child)
-    }
+  _.each(this.children, function (child) {
+    var childEl = (child instanceof Element)
+      ? child.render()
+      : document.createTextNode(child)
     el.appendChild(childEl)
   })
 
   return el
 }
 
-export default Element
+module.exports = Element
