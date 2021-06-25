@@ -12,7 +12,8 @@
   <body>
     <div id="container"></div>
     <script type="text/babel">
-      const element = <div>123</div>
+      const element = <div title="foo">hello</div>
+      console.log(element)
       const container = document.getElementById('container')
       ReactDOM.render(element, container);
     </script>
