@@ -5,6 +5,7 @@
     <title>Hello World</title>
   </head>
   <body>
+    <div id='container'></div>
     <script>
       const element = {
         type: 'div',
@@ -13,18 +14,13 @@
             children: 'hello'
         }
       }
-      const container = document.getElementById("root")
-      ​
+      const container = document.getElementById("container")
       const node = document.createElement(element.type)
       node["title"] = element.props.title
-      ​
       const text = document.createTextNode("")
       text["nodeValue"] = element.props.children
-      ​
       node.appendChild(text)
       container.appendChild(node)
-
-      
     </script>
   </body>
 </html>
