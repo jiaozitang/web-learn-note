@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="./react/react.development.js"></script>
+    <script src="./react/react-dom.development.js"></script>
+    <script src="./babel/babel.min.js"></script>
+</head>
+<body>
+    <div id='container'></div>
+    <script type="text/babel">
+        function createElement (type, props, ...children) {
+            return {
+                type,
+                props: {
+                    ...props,
+                    children: children.map(child => 
+                        typeof child === 'object'
+                        ? child
+                        : createTextElement(child)
+                    )
+                }
+            }
+        }
+        function createTextElement (text) {
+            return {
+                type: "TEXT_ELEMENT",
+                props: {
+                    nodeValue: text,
+                    children: []
+                }
+            }
+        }
+
+        function createDom (fiber) {
+            const dom = fiber.type === 'TEXT_ELEMENT'
+                ? document.createTextNode("")
+                : document.createElement(fiber.type)
+            const isProperty = key => key !== "children"
+            Object.keys(fiber.props)
+                .filter(isProperty)
+                .forEach(name => {
+                    dom[name] = fiber.props[name]
+                })
+            return dom
+        }
+
+        let nextUnitOfWork = null
+        let wipRoot = null
+        function render (element, container) {
+            wipRoot = {
+                dom: container,
+                props: {
+                    children: [element]
+                }
+            }
+            console.log(1111, wipRoot)
+            nextUnitOfWork = wipRoot
+        }
+
+        function commitRoot () {
+            commitWork(wipRoot.child)
+            wipRoot = null
+        }
+
+        function commitWork (fiber) {
+            if (!fiber) return
+            const domParent = fiber.parent.dom
+            domParent.appendChild(fiber.dom)
+            commitWork(fiber.child)
+            commitWork(fiber.sibling)
+        }
+
+        function workLoop (deadline) {
+            let shouldYield = false
+            while (nextUnitOfWork && !shouldYield) {
+                nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
+                shouldYield = deadline.timeRemaining() < 1
+            }
+
+            if (!nextUnitOfWork && wipRoot) {
+                commitRoot()
+            }
+
+            requestIdleCallback(workLoop)
+        }
+
+        requestIdleCallback(workLoop)
+
+        function performUnitOfWork(fiber) {
+            if (!fiber.dom) {
+                fiber.dom = createDom(fiber)
+            }
+
+            const elements = fiber.props.children
+            let index = 0
+            let prevSibling = null
+
+            while (index < elements.length) {
+                const element = elements[index]
+
+                const newFiber = {
+                    type: element.type,
+                    props: element.props,
+                    parent: fiber,
+                    dom: null,
+                }
+
+                if (index === 0) {
+                    fiber.child = newFiber
+                } else {
+                    prevSibling.sibling = newFiber
+                }
+
+                prevSibling = newFiber
+                index++
+            }
+
+            if (fiber.child) {
+                return fiber.child
+            }
+            let nextFiber = fiber
+            while (nextFiber) {
+                if (nextFiber.sibling) {
+                    return nextFiber.sibling
+                }
+                nextFiber = nextFiber.parent
+            }
+        }
+
+        const myReact = {
+            createElement,
+            render
+        }
+    
+        /** @jsx myReact.createElement */
+        const element = (
+            <div>
+                <h1>
+                <p />
+                <a />
+                </h1>
+                <h2 />
+            </div>
+        )
+
+        myReact.render(element, document.getElementById('container'))
+    </script>
+</body>
+</html>
