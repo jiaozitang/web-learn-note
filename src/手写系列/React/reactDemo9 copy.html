@@ -186,7 +186,7 @@
             let nextFiber = fiber
             while (nextFiber) {
                 if (nextFiber.sibling) {
-                return nextFiber.sibling
+                    return nextFiber.sibling
                 }
                 nextFiber = nextFiber.parent
             }
@@ -206,43 +206,43 @@
                 let newFiber = null
 
                 const sameType =
-                oldFiber &&
-                element &&
-                element.type == oldFiber.type
+                    oldFiber &&
+                    element &&
+                    element.type == oldFiber.type
 
                 if (sameType) {
-                newFiber = {
-                    type: oldFiber.type,
-                    props: element.props,
-                    dom: oldFiber.dom,
-                    parent: wipFiber,
-                    alternate: oldFiber,
-                    effectTag: "UPDATE",
-                }
+                    newFiber = {
+                        type: oldFiber.type,
+                        props: element.props,
+                        dom: oldFiber.dom,
+                        parent: wipFiber,
+                        alternate: oldFiber,
+                        effectTag: "UPDATE",
+                    }
                 }
                 if (element && !sameType) {
-                newFiber = {
-                    type: element.type,
-                    props: element.props,
-                    dom: null,
-                    parent: wipFiber,
-                    alternate: null,
-                    effectTag: "PLACEMENT",
-                }
+                    newFiber = {
+                        type: element.type,
+                        props: element.props,
+                        dom: null,
+                        parent: wipFiber,
+                        alternate: null,
+                        effectTag: "PLACEMENT",
+                    }
                 }
                 if (oldFiber && !sameType) {
-                oldFiber.effectTag = "DELETION"
-                deletions.push(oldFiber)
+                    oldFiber.effectTag = "DELETION"
+                    deletions.push(oldFiber)
                 }
 
                 if (oldFiber) {
-                oldFiber = oldFiber.sibling
+                    oldFiber = oldFiber.sibling
                 }
 
                 if (index === 0) {
-                wipFiber.child = newFiber
+                    wipFiber.child = newFiber
                 } else if (element) {
-                prevSibling.sibling = newFiber
+                    prevSibling.sibling = newFiber
                 }
 
                 prevSibling = newFiber
@@ -256,7 +256,7 @@
         }
 
         /** @jsx Didact.createElement */
-        const container = document.getElementById("root")
+        const container = document.getElementById("container")
 
         const updateValue = e => {
             rerender(e.target.value)

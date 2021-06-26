@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+
+    <script src="./react/react.development.js"></script>
+    <script src="./react/react-dom.development.js"></script>
     <script src="./babel/babel.min.js"></script>
 </head>
 <body>
@@ -234,17 +237,15 @@
             render
         }
     
-        /** @jsx myReact.createElement */
-        const container = document.getElementById("container")
-
         const updateValue = e => {
             rerender(e.target.value)
         }
         const rerender = value => {
+            // debugger
             const element = (
                 <div>
                     <input onInput={updateValue} value={value} />
-                    <h2>Helloww {value}</h2>
+                    <h2>Hello {value}</h2>
                 </div>
             )
             myReact.render(element, container)
