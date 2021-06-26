@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+
     <script src="./babel/babel.min.js"></script>
 </head>
 <body>
@@ -112,7 +113,7 @@
                 domParent.appendChild(fiber.dom)
             } else if (fiber.effectTag === "DELETION") {
                 domParent.removeChild(fiber.dom)
-            } else if (fiber.effctTag === 'UPDATE' && fiber.dom !== null) {
+            } else if (fiber.effectTag === 'UPDATE' && fiber.dom !== null) {
                 updateDom(fiber.dom, fiber.alternate.props, fiber.props)
             }
             
@@ -178,7 +179,7 @@
             let oldFiber = wipFiber.alternate && wipFiber.alternate.child
             let prevSibling = null
 
-            while (index < elements.length || oldFiber !== null) {
+            while (index < elements.length || oldFiber != null) {
                 const element = elements[index]
                 let newFiber = null
 
@@ -233,18 +234,19 @@
             createElement,
             render
         }
-    
+
         /** @jsx myReact.createElement */
         const container = document.getElementById("container")
 
         const updateValue = e => {
             rerender(e.target.value)
         }
+
         const rerender = value => {
             const element = (
                 <div>
                     <input onInput={updateValue} value={value} />
-                    <h2>Helloww {value}</h2>
+                    <h2>Hello {value}</h2>
                 </div>
             )
             myReact.render(element, container)
