@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="./react/react.development.js"></script>
+    <script src="./react/react-dom.development.js"></script>
+</head>
+<body>
+    <div id='container'></div>
+    <script>
+        function createElement (type, props, ...children) {
+            return {
+                type,
+                props: {
+                    ...props,
+                    children: children.map(child => 
+                        typeof child === 'object'
+                        ? child
+                        : createTextElement(child)
+                    )
+                }
+            }
+        }
+        function createTextElement (text) {
+            return {
+                type: "TEXT_ELEMENT",
+                props: {
+                    nodeValue: text,
+                    children: []
+                }
+            }
+        }
+        const myReact = {
+            createElement
+        }
+        const element = myReact.createElement(
+        "div",
+        { id: "foo" },
+        myReact.createElement("a", null, "bar"),
+        myReact.createElement("b")
+        )
+        console.log(element)
+    </script>
+</body>
+</html>
