@@ -135,6 +135,7 @@
         }
 
         function render (element, container) {
+            // console.log(2123)
             wipRoot = {
                 dom: container,
                 props: {
@@ -302,6 +303,7 @@
         const container = document.getElementById("container")
 
         function Counter() {
+            console.log('counter')
             const [count, setCount] = myReact.useState(1)
             const [count2, setCount2] = myReact.useState(1)
             return (

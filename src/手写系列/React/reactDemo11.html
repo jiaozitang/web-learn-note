@@ -190,21 +190,35 @@
         let hookIndex = null
         function updateFunctionComponent(fiber) {
             wipFiber = fiber
-            hookIndex = 0
             wipFiber.hooks = []
+            hookIndex = 0
             const children = [fiber.type(fiber.props)]
             reconcileChildren(fiber, children)
         }
 
+        function updateRender () {
+            wipRoot = {
+                dom: currentRoot.dom,
+                props: currentRoot.props,
+                alternate: currentRoot
+            }
+
+            // 设置下一个工作单元
+            nextUnitOfWork = wipRoot
+
+            // 清空需删除的节点
+            deletions = []
+        }
+
         function useState (initial) {
-            const oldHook =
+            const oldHook = 
                 wipFiber.alternate &&
                 wipFiber.alternate.hooks &&
                 wipFiber.alternate.hooks[hookIndex]
 
             const hook = {
-                state: oldHook ? oldHook.state : initial,
-                queue: [],
+                state: oldHook ? oldHook.state : initial , 
+                quene: []
             }
 
             const actions = oldHook ? oldHook.queue : []
@@ -212,19 +226,14 @@
                 hook.state = action(hook.state)
             })
 
-            const setState = action => {
-                hook.queue.push(action)
-                wipRoot = {
-                    dom: currentRoot.dom,
-                    props: currentRoot.props,
-                    alternate: currentRoot,
-                }
-                nextUnitOfWork = wipRoot
-                deletions = []
+            let setState = action => {
+                hook.quene.push(action)
+                // 需要渲染页面，参考 render 函数
+                updateRender()
             }
 
             wipFiber.hooks.push(hook)
-            hookIndex++
+            hookIndex ++
             return [hook.state, setState]
         }
 
@@ -302,14 +311,10 @@
 
         function Counter() {
             const [count, setCount] = myReact.useState(1)
-            const [count2, setCount2] = myReact.useState(1)
             return (
                 <div>
                     <h1 onClick={() => setCount(count => count + 1)}>
                         Count: {count}
-                    </h1>
-                    <h1 onClick={() => setCount2(count => count + 1)}>
-                        Count: {count2}
                     </h1>
                 </div>
             )
