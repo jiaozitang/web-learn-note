@@ -187,11 +187,9 @@
         }
 
         let wipFiber = null
-        let hookIndex = null
         function updateFunctionComponent(fiber) {
             wipFiber = fiber
-            wipFiber.hooks = []
-            hookIndex = 0
+            wipFiber.hook = null
             const children = [fiber.type(fiber.props)]
             reconcileChildren(fiber, children)
         }
@@ -213,8 +211,7 @@
         function useState (initial) {
             const oldHook = 
                 wipFiber.alternate &&
-                wipFiber.alternate.hooks &&
-                wipFiber.alternate.hooks[hookIndex]
+                wipFiber.alternate.hook
 
             const hook = {
                 state: oldHook ? oldHook.state : initial , 
@@ -232,8 +229,7 @@
                 updateRender()
             }
 
-            wipFiber.hooks.push(hook)
-            hookIndex ++
+            wipFiber.hook = hook
             return [hook.state, setState]
         }
 
