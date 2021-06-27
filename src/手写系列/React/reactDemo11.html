@@ -218,7 +218,7 @@
 
             const hook = {
                 state: oldHook ? oldHook.state : initial , 
-                quene: []
+                queue: []
             }
 
             const actions = oldHook ? oldHook.queue : []
@@ -227,7 +227,7 @@
             })
 
             let setState = action => {
-                hook.quene.push(action)
+                hook.queue.push(action)
                 // 需要渲染页面，参考 render 函数
                 updateRender()
             }
