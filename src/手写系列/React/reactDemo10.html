@@ -105,7 +105,6 @@
 
         function commitWork (fiber) {
             if (!fiber) return
-            
             let domParentFiber = fiber.parent
             while (!domParentFiber.dom) {
                 domParentFiber = domParentFiber.parent
@@ -169,13 +168,12 @@
         requestIdleCallback(workLoop)
 
         function performUnitOfWork(fiber) {
-            const isFunctionComponent = fiber.type instanceof Function
-            // if (isFunctionComponent) {
-            //     updateFunctionComponent(fiber)
-            // } else {
-            //     updateHostComponent(fiber)
-            // }
-
+            const isFunctionComponent = fiber && fiber.type && fiber.type instanceof Function
+            if (isFunctionComponent) {
+                updateFunctionComponent(fiber)
+            } else {
+                updateHostComponent(fiber)
+            }
             if (fiber.child) {
                 return fiber.child
             }
@@ -187,12 +185,12 @@
                 nextFiber = nextFiber.parent
             }
         }
-​
+
         function updateFunctionComponent(fiber) {
             const children = [fiber.type(fiber.props)]
             reconcileChildren(fiber, children)
         }
-        ​
+
         function updateHostComponent(fiber) {
             if (!fiber.dom) {
                 fiber.dom = createDom(fiber)
