@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+  </head>
+  <body>
+    <div id='container'></div>
+    <script>
+      const element = {
+        type: 'div',
+        props: {
+            title: 'foo',
+            children: 'hello'
+        }
+      }
+      const container = document.getElementById("container")
+      const node = document.createElement(element.type)
+      node["title"] = element.props.title
+      const text = document.createTextNode("")
+      text["nodeValue"] = element.props.children
+      node.appendChild(text)
+      container.appendChild(node)
+    </script>
+  </body>
+</html>
