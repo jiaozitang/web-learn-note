@@ -1,5 +1,1 @@
-/node_modules
-.history
-package-lock.json
-
-index2.html
+node_modules

@@ -1,17 +1,14 @@
 {
-  "name": "my-project",
-  "version": "1.0.0",
+  "name": "my-project-a",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@changesets/changelog-github": "^0.4.5",
-    "@changesets/cli": "^2.24.3",
-    "eslint": "^8.26.0"
+    "rollup": "^3.2.5"
   }
 }
